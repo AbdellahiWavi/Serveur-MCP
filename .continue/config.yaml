@@ -1,0 +1,13 @@
+name: Network Security MCP
+version: 0.0.1
+schema: v1
+
+mcpServers:
+  - name: network-security
+    type: stdio
+    command: "C:\\Users\\ABDELLAHI\\OneDrive\\Desktop\\mon_server_mcp\\venv\\Scripts\\python.exe"
+    args:
+      - "network_server.py"
+    cwd: "C:\\Users\\ABDELLAHI\\OneDrive\\Desktop\\mon_server_mcp"
+    env:
+      PYTHONPATH: "."

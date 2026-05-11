@@ -1,0 +1,24 @@
+name: Network Security MCP Agent
+version: 0.0.1
+schema: v1
+
+description: Agent de sécurité réseau utilisant le serveur MCP pour scanner les ports et vérifier les connexions
+
+mcpServers:
+  - name: network-security
+    type: stdio
+    command: python
+    args:
+      - "network_server.py"
+    cwd: "C:\\Users\\ABDELLAHI\\OneDrive\\Desktop\\mon_server_mcp"
+    env:
+      PYTHONPATH: "."
+
+roles:
+  - name: security-engineer
+    description: Ingénieur en sécurité réseau
+    capabilities:
+      - scan_ports
+      - ping_host
+      - check_connections
+      - get_network_stats

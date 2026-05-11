@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "network": {
+      "command": "python network_server.py"
+    },
+    "logs": {
+      "command": "python log_server.py"
+    }
+  }
+}

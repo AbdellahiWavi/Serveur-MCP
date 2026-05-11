@@ -1,0 +1,17 @@
+{
+  "llm": {
+    "provider": "ollama",
+    "model": "mistral",
+    "base_url": "http://localhost:11434"
+  },
+  "mcp_servers": [
+    {
+      "name": "network",
+      "command": "python network_server.py"
+    },
+    {
+      "name": "logs",
+      "command": "python log_server.py"
+    }
+  ]
+}

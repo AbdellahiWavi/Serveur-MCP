@@ -1,0 +1,48 @@
+name: Network Security MCP Server
+version: 0.0.1
+schema: v1
+description: Serveur MCP pour les outils de sécurité réseau
+
+mcpServers:
+  - name: network-security
+    type: stdio
+    command: python
+    args:
+      - "network_server.py"
+    cwd: "C:\\Users\\ABDELLAHI\\OneDrive\\Desktop\\mon_server_mcp"
+    env:
+      PYTHONPATH: "."
+    timeout: 30000
+    
+tools:
+  - name: scan_ports
+    description: Scanne les ports ouverts sur un hôte cible
+    input:
+      type: object
+      properties:
+        host:
+          type: string
+          description: Adresse IP ou nom d'hôte cible
+        port_range:
+          type: string
+          description: Plage de ports (ex. 1-1024)
+          default: "1-1024"
+  
+  - name: ping_host
+    description: Ping un hôte pour vérifier sa disponibilité
+    input:
+      type: object
+      properties:
+        host:
+          type: string
+          description: Adresse IP ou nom d'hôte
+  
+  - name: check_connections
+    description: Vérifie les connexions réseau actives
+    input:
+      type: object
+  
+  - name: get_network_stats
+    description: Récupère les statistiques réseau
+    input:
+      type: object

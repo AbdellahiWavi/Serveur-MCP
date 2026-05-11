@@ -1,0 +1,45 @@
+{
+  "models": [
+    {
+      "title": "GPT-4",
+      "provider": "openai",
+      "model": "gpt-4"
+    },
+    {
+      "title": "Claude 3 Sonnet",
+      "provider": "anthropic",
+      "model": "claude-3-sonnet"
+    }
+  ],
+  "mcpServers": {
+    "network-security": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["network_server.py"],
+      "cwd": "C:\\Users\\ABDELLAHI\\OneDrive\\Desktop\\mon_server_mcp",
+      "env": {
+        "PYTHONPATH": "."
+      },
+      "timeout": 30000
+    }
+  },
+  "tabAutocompleteModel": {
+    "title": "Autocomplete",
+    "provider": "openai",
+    "model": "gpt-3.5-turbo"
+  },
+  "allowAnonymousTelemetry": false,
+  "disableSessionTitles": false,
+  "userDefinedSlashCommands": [
+    {
+      "name": "scan",
+      "description": "Scanner les ports d'un hôte",
+      "prompt": "Scanne les ports ouverts sur l'hôte {input} en utilisant la fonction scan_ports"
+    },
+    {
+      "name": "network-check",
+      "description": "Vérifier l'état du réseau",
+      "prompt": "Vérifie l'état du réseau sur l'hôte {input} en utilisant ping_host et check_connections"
+    }
+  ]
+}
