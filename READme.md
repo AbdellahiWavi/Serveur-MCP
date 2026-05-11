@@ -6,27 +6,29 @@ Ce projet implémente une architecture de cyberdéfense agentique basée sur le 
 
 Le système utilise :
 
-* Un LLM local : Ollama + Mistral
-* Des serveurs MCP spécialisés
-* MCP Inspector pour les tests
-* Python + FastMCP
+- Un LLM local : Ollama + Mistral
+- Des serveurs MCP spécialisés
+- MCP Inspector pour les tests
+- Python + FastMCP
 
 Le projet contient deux serveurs MCP :
 
-* `network_server.py` : surveillance réseau
-* `log_server.py` : analyse de logs
+- `network_server.py` : surveillance réseau
+- `log_server.py` : analyse de logs
 
 ---
 
 # Prérequis
 
-Avant d’exécuter le projet, assurez-vous d’avoir installé :
+Avant d’exécuter le projet, assurez-vous d’avoir installé les composants suivants.
+
+---
 
 ## 1. Python 3.11+
 
 Téléchargement :
 
-[https://www.python.org/downloads/](https://www.python.org/downloads/)
+https://www.python.org/downloads/
 
 Vérification :
 
@@ -42,7 +44,7 @@ Nécessaire pour MCP Inspector.
 
 Téléchargement :
 
-[https://nodejs.org/](https://nodejs.org/)
+https://nodejs.org/
 
 Vérification :
 
@@ -57,7 +59,7 @@ npm -v
 
 Téléchargement :
 
-[https://ollama.com/](https://ollama.com/)
+https://ollama.com/
 
 Installer ensuite le modèle Mistral :
 
@@ -71,9 +73,10 @@ ollama pull mistral
 
 Téléchargement :
 
-[https://nmap.org/download.html](https://nmap.org/download.html)
+https://nmap.org/download.html
 
 ⚠ Important :
+
 Ajouter Nmap au PATH Windows durant l’installation.
 
 Vérification :
@@ -84,7 +87,7 @@ nmap --version
 
 ---
 
-# Installation du projet
+# Installation du Projet
 
 ## 1. Cloner le dépôt GitHub
 
@@ -140,24 +143,30 @@ pip install mcp fastmcp
 
 ---
 
-# Exécution des serveurs MCP
+# Exécution des Serveurs MCP
 
-⚠ IMPORTANT :
+## Important
 
-Les deux serveurs MCP ne doivent pas être exécutés en même temps avec `mcp dev`.
+Les deux serveurs MCP utilisent par défaut les mêmes ports MCP Inspector.
 
-Exécutez uniquement un serveur à la fois ou bien changer le port du serveur et le port du client.
+Par conséquent, exécuter les deux commandes simultanément avec `mcp dev` peut provoquer :
+
+- des conflits de ports ;
+- des erreurs MCP Inspector ;
+- des problèmes de communication STDIO.
 
 ---
 
-# Lancer le serveur réseau
+# Option 1 — Exécuter un seul serveur à la fois (Recommandé)
 
-Le serveur `network_server.py` contient les outils de surveillance réseau :
+## Lancer le serveur réseau
 
-* scan_ports()
-* ping_host()
-* check_connections()
-* get_network_stats()
+Le serveur `network_server.py` contient les outils :
+
+- `scan_ports()`
+- `ping_host()`
+- `check_connections()`
+- `get_network_stats()`
 
 Commande :
 
@@ -165,24 +174,16 @@ Commande :
 mcp dev network_server.py
 ```
 
-Après le lancement, MCP Inspector ouvrira automatiquement une interface web.
-
-Par défaut :
-
-```text
-http://localhost:6274
-```
-
 ---
 
-# Lancer le serveur d’analyse de logs
+## Lancer le serveur d’analyse de logs
 
-Le serveur `log_server.py` contient les outils d’analyse de logs :
+Le serveur `log_server.py` contient les outils :
 
-* read_logs()
-* detect_bruteforce()
-* analyze_errors()
-* get_security_summary()
+- `parse_auth_logs()`
+- `detect_bruteforce()`
+- `get_failed_logins()`
+- `search_log_pattern()`
 
 Commande :
 
@@ -192,40 +193,55 @@ mcp dev log_server.py
 
 ---
 
-# Important
-
-Ne lancez PAS les deux commandes simultanément :
-
-****Mauvaise pratique :****
-
-```bash
-mcp dev network_server.py
-mcp dev log_server.py
-```
-
-Cela peut provoquer :
-
-* des conflits de ports
-* des erreurs MCP Inspector
-* des problèmes de communication STDIO
-
-Mais vous pouvez executer le deux commandes simultanément en donnant à chaque serveur un port différent
-***exemple :***
-$env:CLIENT_PORT=8080; $env:SERVER_PORT=9000; npx @modelcontextprotocol/inspector python network_server.py
-$env:CLIENT_PORT=9090; $env:SERVER_PORT=7070; npx @modelcontextprotocol/inspector python log_server.py
-
-
----
-
-# Bonne pratique
-
-Fermer le premier serveur avant de lancer le second.
-
-Exemple :
+## Bonne pratique
 
 1. Tester `network_server.py`
-2. Fermer le terminal
+2. Fermer le terminal ou arrêter le serveur
 3. Lancer ensuite `log_server.py`
+
+---
+
+# Option 2 — Exécuter les deux serveurs simultanément
+
+Il est possible d’exécuter les deux serveurs en même temps à condition d’utiliser des ports différents pour chaque instance MCP Inspector.
+
+---
+
+## Exemple : serveur réseau
+
+### PowerShell
+
+```powershell
+$env:CLIENT_PORT=8080
+$env:SERVER_PORT=9000
+
+npx @modelcontextprotocol/inspector python network_server.py
+```
+
+Interface MCP Inspector :
+
+```text
+http://localhost:8080
+```
+
+---
+
+## Exemple : serveur logs
+
+### PowerShell
+
+```powershell
+$env:CLIENT_PORT=9090
+$env:SERVER_PORT=7070
+
+npx @modelcontextprotocol/inspector python log_server.py
+```
+
+Interface MCP Inspector :
+
+```text
+http://localhost:9090
+```
 
 ---
 
@@ -233,16 +249,17 @@ Exemple :
 
 MCP Inspector permet :
 
-* de visualiser les outils MCP
-* d’exécuter les fonctions
-* de tester les paramètres
-* de voir les réponses retournées
+- de visualiser les outils MCP ;
+- d’exécuter les fonctions ;
+- de tester les paramètres ;
+- de visualiser les réponses retournées.
 
-Exemple :
+Exemples de tests :
 
-* tester `ping_host()`
-* tester `scan_ports()`
-* tester `detect_bruteforce()`
+- `ping_host()`
+- `scan_ports()`
+- `detect_bruteforce()`
+- `search_log_pattern()`
 
 ---
 
@@ -253,7 +270,7 @@ Serveur-MCP/
 │
 ├── network_server.py
 ├── log_server.py
-├── fake_logs.txt
+├── simulated_auth.log
 ├── requirements.txt
 ├── README.md
 └── venv/
@@ -263,24 +280,25 @@ Serveur-MCP/
 
 # Technologies Utilisées
 
-| Composant           | Technologie      |
-| ------------------- | ---------------- |
-| Langage             | Python 3.11+     |
-| LLM Local           | Ollama + Mistral |
-| SDK MCP             | MCP Python SDK   |
-| Framework MCP       | FastMCP          |
-| Outil de test       | MCP Inspector    |
-| Surveillance réseau | Nmap + Netstat   |
-| Transport           | STDIO            |
+| Composant | Technologie |
+|---|---|
+| Langage | Python 3.11+ |
+| LLM Local | Ollama + Mistral |
+| SDK MCP | MCP Python SDK |
+| Framework MCP | FastMCP |
+| Outil de test | MCP Inspector |
+| Surveillance réseau | Nmap + Netstat |
+| Analyse de logs | Regex + Python |
+| Transport MCP | STDIO |
 
 ---
 
 # Auteurs
 
-* Elwavi Abdellahi
+- Elwavi Abdellahi
 
 ---
 
 # Dépôt GitHub
 
-[https://github.com/AbdellahiWavi/Serveur-MCP](https://github.com/AbdellahiWavi/Serveur-MCP)
+https://github.com/AbdellahiWavi/Serveur-MCP
