@@ -38,28 +38,69 @@ def ping_host(host: str) -> dict:
 @server.tool()
 def check_connections() -> dict:
     """Liste les connexions réseau actives."""
+
     try:
-        result = subprocess.run(['netstat', '-ano'], 
-                              capture_output=True, text=True)
+        result = subprocess.run(
+            ["netstat", "-ano"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="ignore"
+        )
+
+        if result.returncode != 0:
+            return {
+                "status": "error",
+                "stderr": result.stderr
+            }
+
+        output = result.stdout or ""
+
         return {
+            "status": "success",
             "timestamp": datetime.now().isoformat(),
-            "connections": result.stdout[:2000]  # limite pour éviter trop grand output
+            "connections": output[:3000]
         }
+
     except Exception as e:
-        return {"error": str(e)}
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
 
 @server.tool()
 def get_network_stats() -> dict:
-    """Statistiques réseau basiques."""
+    """Retourne les statistiques réseau."""
+
     try:
-        result = subprocess.run(['netstat', '-s'], 
-                              capture_output=True, text=True)
+        result = subprocess.run(
+            ["netstat", "-s"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="ignore"
+        )
+
+        if result.returncode != 0:
+            return {
+                "status": "error",
+                "stderr": result.stderr
+            }
+
+        output = result.stdout or ""
+
         return {
+            "status": "success",
             "timestamp": datetime.now().isoformat(),
-            "stats": result.stdout[:1500]
+            "stats": output[:3000]
         }
+
     except Exception as e:
-        return {"error": str(e)}
+        return {
+            "status": "error",
+            "error": str(e)
+        }
 
 if __name__ == "__main__":
     server.run(transport="stdio")
